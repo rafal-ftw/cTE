@@ -1,67 +1,37 @@
-from attr import s
+import json
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-
-# 1. włączone filtry
-# 2. komponent <main>
-# 3. kazdy <article> to kolejna oferta
-# 4. id inne niż 10 znakowe liczby to reklamy
-# 5. cene z aut znajdziemy w 3 divie jako tekst
-# 6. class contains pagination-list
-# 7. <li title="Next Page">
-# 7.1 - {
-# "model":"x",
-# "year":"z",
-# "price":"y",
-# "addDate":"?",
-# "articleSpecificValue":""
-# }
-
-# 8. powtórz krok 2
+driver = webdriver.Chrome(service=ChromeService(
+    ChromeDriverManager().install()))
 
 
-# json_data = '[{"ID":10,"Name":"Pankaj","Role":"CEO"},' \
-#             '{"ID":20,"Name":"David Lee","Role":"Editor"}]'
+parameter_file = open(f'{os.getcwd()}\scraping\params\parameters.json')
+params = json.load(parameter_file)
 
-def scrapAllModelData(manufacturer, model):
-    
-    result = '[{"ID":10,"Name":"Pankaj","Role":"CEO"},' \
-             '{"ID":20,"Name":"David Lee","Role":"Editor"}]'
 
+def scrapAllModelData(manufacturer, model, generation):
+
+    print(f'current manufacturer for selenium is {manufacturer}')
+    print(f'current model for sele is {model}')
+    print(f'current generation for selenium is {generation}')
 
     driver.get("https://www.otomoto.pl/")
+    driver.get("https://wp.pl/")
 
-    # driver.find_element(By.blablabla).send_keys(manufacturer)
-
-    # lokalnie zapisz jsona se jako koniec funkcji
-    # bo potem trzeba bedzie to wyslac do backendu za pomoca requests
-    # jsona
-
-    # kurwa
+    pass
 
 
-    
-{
-"search1":{
-    "manufacturer":"bmw",
-    "model":"seria 3",
-    "generation":"g30"
-    },
-
-"search2":{
-    "manufacturer":"bmw",
-    "model":"seria 5",
-    "generation":"f10"
-    },
-
-"search3":{
-    "manufacturer":"audi",
-    "model":"a4",
-    "generation":"b8"
-    }
-}
+def main():
+    for key in params:
+        paramsValue = params[key]
+        scrapAllModelData(paramsValue["manufacturer"],
+                        paramsValue["model"],
+                        paramsValue["generation"])
 
 
+if __name__ == "__main__":
+    main()

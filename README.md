@@ -25,3 +25,25 @@ Car tool engine
 
 
 12. mamy rekordy - kurwa louda - react wyswietla nam srednia cene dla danych aut z przedzialu x do przedzialu y : ) 
+
+
+# 1. włączone filtry
+# 2. komponent <main>
+# 3. kazdy <article> to kolejna oferta
+# 4. id inne niż 10 znakowe liczby to reklamy
+# 5. cene z aut znajdziemy w 3 divie jako tekst
+# 6. class contains pagination-list
+# 7. <li title="Next Page">
+# 7.1 - {
+# "model":"x",
+# "year":"z",
+# "price":"y",
+# "addDate":"?",
+# "articleSpecificValue":""
+# }
+
+# 8. powtórz krok 2
+
+
+# json_data = '[{"ID":10,"Name":"Pankaj","Role":"CEO"},' \
+#             '{"ID":20,"Name":"David Lee","Role":"Editor"}]'
