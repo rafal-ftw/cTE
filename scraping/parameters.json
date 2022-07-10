@@ -1,0 +1,19 @@
+{
+    "search1":{
+        "manufacturer":"bmw",
+        "model":"seria 3",
+        "generation":"g30"
+        },
+    
+    "search2":{
+        "manufacturer":"bmw",
+        "model":"seria 5",
+        "generation":"f10"
+        },
+    
+    "search3":{
+        "manufacturer":"audi",
+        "model":"a4",
+        "generation":"b8"
+        }
+}
