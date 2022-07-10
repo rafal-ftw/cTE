@@ -1,4 +1,3 @@
-from attr import s
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -23,6 +22,10 @@ driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install())
 # 8. powtórz krok 2
 
 
+
+
+
+
 # json_data = '[{"ID":10,"Name":"Pankaj","Role":"CEO"},' \
 #             '{"ID":20,"Name":"David Lee","Role":"Editor"}]'
 
@@ -44,24 +47,24 @@ def scrapAllModelData(manufacturer, model):
 
 
     
-{
-"search1":{
-    "manufacturer":"bmw",
-    "model":"seria 3",
-    "generation":"g30"
-    },
+# {
+# "search1":{
+#     "manufacturer":"bmw",
+#     "model":"seria 3",
+#     "generation":"g30"
+#     },
 
-"search2":{
-    "manufacturer":"bmw",
-    "model":"seria 5",
-    "generation":"f10"
-    },
+# "search2":{
+#     "manufacturer":"bmw",
+#     "model":"seria 5",
+#     "generation":"f10"
+#     },
 
-"search3":{
-    "manufacturer":"audi",
-    "model":"a4",
-    "generation":"b8"
-    }
-}
+# "search3":{
+#     "manufacturer":"audi",
+#     "model":"a4",
+#     "generation":"b8"
+#     }
+# }
 
 
