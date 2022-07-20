@@ -10,60 +10,67 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-driver = webdriver.Chrome(service=ChromeService(
-    ChromeDriverManager().install()))
-    
+from selenium_utils.webdriverSettings import initiateOptions
+# this one is headless for testing
+# driver = webdriver.Chrome(options = initiateOptions(), service=ChromeService(ChromeDriverManager().install()))
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+action = ActionChains(driver)
+
+
 def scrapAllModelData(*args):
 
     wait = WebDriverWait(driver, 5)
-    
+
+
     driver.get("https://www.otomoto.pl/")
     driver.maximize_window()
-    
-    #cookies show only one time for browser
+
+    # TODO cookies show only one time for browser
     cookiesAcceptButton = driver.find_element(By.ID, "onetrust-accept-btn-handler")
     cookiesAcceptButton.click()
-    
-    manufacturerInput = wait.until(EC.element_to_be_clickable
-                                                    ((By.ID, "filter_enum_make")))
-    manufacturerInput.click()
-    manufacturerInput.send_keys(args[0])
-    manufacturerInput.send_keys(Keys.ENTER)
-    time.sleep(0.5)
 
-    modelInput = wait.until(EC.element_to_be_clickable
-                                                    ((By.ID, "filter_enum_model")))
-    modelInput.click()
-    modelInput.send_keys(args[1])
-    modelInput.send_keys(Keys.ENTER)
-    time.sleep(0.5)
+    if len(args) <= 3:
+        try:
+            manufacturerInput = wait.until(EC.element_to_be_clickable((By.ID, "filter_enum_make")) )
+            action.click(manufacturerInput).send_keys(args[0]).send_keys(Keys.ENTER).perform()
+            time.sleep(0.5)
 
-    generationInput = wait.until(EC.element_to_be_clickable
-                                                    ((By.ID, "filter_enum_generation")))
-    generationInput.click()
-    generationInput.send_keys(args[2])
-    generationInput.send_keys(Keys.ENTER)
-    time.sleep(0.5)
+            modelInput = wait.until(EC.element_to_be_clickable((By.ID, "filter_enum_model")))
+            action.click(modelInput).send_keys(args[1]).send_keys(Keys.ENTER).perform()
+            time.sleep(0.5)
 
-    time.sleep(2.5)
-
+            if len(args) == 2:
+                generationInput = wait.until(EC.element_to_be_clickable((By.ID, "filter_enum_generation")))
+                action.click(generationInput).send_keys(args[2]).pause(0.5).send_keys(Keys.ENTER).perform()
+                time.sleep(0.5)
+            else:
+        except:
+            print("too many arguments")
     searchButton = driver.find_element(By.CLASS_NAME, "ds-button.ds-width-full")
     searchButton.click()
 
-    #get source
-    #parse it
-    #get values
-    #save dictionaries in array to send to backend
+    # get source
+    # parse it
+    # get values
+    # save dictionaries in array to send to backend
 
     lastPage = False
 
     while lastPage != True:
         try:
-            siteNextPageButton = wait.until(EC.element_to_be_clickable
-                                                    ((By.XPATH, "//*[@data-testid='pagination-step-forwards']")))
-            ActionChains(driver).move_to_element(siteNextPageButton).click(siteNextPageButton).perform()
+            siteNextPageButton = wait.until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, "//*[@data-testid='pagination-step-forwards']")
+                )
+            )
+            action.move_to_element(siteNextPageButton).pause(4).scroll_by_amount(
+                0, 10
+            ).click(siteNextPageButton).perform()
+
         except:
             lastPage = True
-            print("You've reached last page of records, all the models are sent to the backend")
+            print(
+                "You've reached last page of records, all the models are sent to the backend"
+            )
             # send post request
             break

@@ -5,18 +5,13 @@ from selenium_utils.navigation import scrapAllModelData
 
 def main():
     
-    parameter_file = open(f'{os.getcwd()}\parameters.json')
+    parameter_file = open(f'{os.getcwd()}\scraping\parameters.json')
     params = json.load(parameter_file)  
 
     
     for searchSet in params:
         currentSearchSet = params[searchSet]
         args = []
-
-        if "generation" not in currentSearchSet.keys():
-            if "year" not in currentSearchSet.keys():
-                print(f"Must provide at least generation or year of make. Current data set: {currentSearchSet}")
-                break
 
         if "manufacturer" not in currentSearchSet:
             print(f"no manufacturer within current data set. Current data set: {searchSet}")

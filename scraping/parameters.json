@@ -1,17 +1,21 @@
 {
     "search1":{
+        "manufacturer":"ford",
+        "model":"mustang"
+        },
+    "search2":{
         "manufacturer":"bmw",
         "model":"seria 3",
         "generation":"g30"
         },
     
-    "search2":{
+    "search3":{
         "manufacturer":"bmw",
         "model":"seria 5",
         "generation":"f10"
         },
     
-    "search3":{
+    "search4":{
         "manufacturer":"audi",
         "model":"a4",
         "generation":"b8"
