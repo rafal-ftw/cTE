@@ -11,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from selenium_utils.webdriverSettings import initiateOptions
+
 # this one is headless for testing
 # driver = webdriver.Chrome(options = initiateOptions(), service=ChromeService(ChromeDriverManager().install()))
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
@@ -40,12 +41,15 @@ def scrapAllModelData(*args):
             time.sleep(0.5)
 
             if len(args) == 2:
+                pass
+            else:
                 generationInput = wait.until(EC.element_to_be_clickable((By.ID, "filter_enum_generation")))
                 action.click(generationInput).send_keys(args[2]).pause(0.5).send_keys(Keys.ENTER).perform()
                 time.sleep(0.5)
-            else:
-        except:
-            print("too many arguments")
+
+        except Exception as e:
+            print(f"there has been an error! {e}")
+
     searchButton = driver.find_element(By.CLASS_NAME, "ds-button.ds-width-full")
     searchButton.click()
 
@@ -58,14 +62,9 @@ def scrapAllModelData(*args):
 
     while lastPage != True:
         try:
-            siteNextPageButton = wait.until(
-                EC.element_to_be_clickable(
-                    (By.XPATH, "//*[@data-testid='pagination-step-forwards']")
-                )
-            )
-            action.move_to_element(siteNextPageButton).pause(4).scroll_by_amount(
-                0, 10
-            ).click(siteNextPageButton).perform()
+            siteNextPageButton = wait.until(EC.element_to_be_clickable(
+                    (By.XPATH, "//*[@data-testid='pagination-step-forwards']")))
+            action.move_to_element(siteNextPageButton).pause(4).scroll_by_amount(0, 10).click(siteNextPageButton).perform()
 
         except:
             lastPage = True
