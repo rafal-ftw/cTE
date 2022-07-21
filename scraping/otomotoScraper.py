@@ -1,5 +1,6 @@
 import json
 import os
+import selenium_utils.globals as globals
 
 from selenium_utils.navigation import scrapAllModelData
 
@@ -8,6 +9,7 @@ def main():
     parameter_file = open(f'{os.getcwd()}\scraping\parameters.json')
     params = json.load(parameter_file)  
 
+    globals.initialize()
     
     for searchSet in params:
         currentSearchSet = params[searchSet]

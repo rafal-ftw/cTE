@@ -1,4 +1,9 @@
 {
+    "search0":{
+        "manufacturer":"bmw",
+        "model":"seria 5",
+        "generation":"e34"
+    },
     "search1":{
         "manufacturer":"ford",
         "model":"mustang"
