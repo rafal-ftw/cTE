@@ -49,15 +49,16 @@ def navigateThroughSpecificSetOfParameters(*args):
             # checkAndCorrect(modelInput, args[1])
             modelInput.send_keys(Keys.RETURN)
 
-            print(len(args))
 
             if len(args) == 2:
                 pass
             else:
                 generationInput = wait.until(EC.element_to_be_clickable((By.ID, "filter_enum_generation")))
-                action.click(generationInput).send_keys(args[2]).pause(1).perform()
+                action.click(generationInput).send_keys(args[2]).pause(0.5).perform()
                 # checkAndCorrect(generationInput, args[2])
                 generationInput.send_keys(Keys.RETURN)
+                # TODO wait.until(EC.text_to_be_present_in_element(generationInput, args[2]))
+                time.sleep(2)
 
             searchButton = driver.find_element(By.XPATH, "//button[@data-testid='submit-btn']")
             searchButton.click()
@@ -68,15 +69,17 @@ def navigateThroughSpecificSetOfParameters(*args):
 
     lastPage = False
 
-    while lastPage != True:
-        try:
-            scrapModelsFromCurrentSite_AndSendRequestToDatabase(driver.page_source)
+    while lastPage == False:
 
+        wait.until(EC.title_contains, "osobowe - otomoto.pl")
+        wait.until(EC.visibility_of_element_located((By.XPATH, "//article[@data-testid = 'listing-ad']")))
+
+        scrapModelsFromCurrentSite_AndSendRequestToDatabase(driver.page_source)
+        
+        try:
             siteNextPageButton = wait.until(EC.element_to_be_clickable(
                     (By.XPATH, "//*[@data-testid='pagination-step-forwards']")))
-            action.move_to_element(siteNextPageButton).pause(2).scroll_by_amount(0, 10).click(siteNextPageButton).perform()
-
-            
+            action.move_to_element(siteNextPageButton).pause(1).scroll_by_amount(0, 10).click(siteNextPageButton).perform()
         except:
             lastPage = True
             print("You've reached last page of records, all the models are sent to the backend")
