@@ -6,7 +6,7 @@ from bin.navigation import navigateThroughSpecificSetOfParameters
 
 def main():
     
-    parameter_file = open(f'{os.getcwd()}\\parameters.json')
+    parameter_file = open(f'{os.getcwd()}/scraping/parameters.json')
     params = json.load(parameter_file)  
 
     globals.initialize()

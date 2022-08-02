@@ -1,6 +1,3 @@
-import time
-import os
-
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -15,18 +12,13 @@ from bin.scraping import scrapModelsFromCurrentSite_AndSendRequestToDatabase
 from bin.webdriverSettings import initiateWebDriverOptions
 import bin.globals as globals
 
-# this one is headless for testing
-print(os.getcwd())
 driver = webdriver.Chrome(options = initiateWebDriverOptions(), service=ChromeService(ChromeDriverManager().install()))
 action = ActionChains(driver)
 
 
 def navigateThroughSpecificSetOfParameters(*args):
-
     wait = WebDriverWait(driver, 5)
-
     driver.get("https://www.otomoto.pl/")
-    driver.maximize_window()
 
     if globals.cookieFlag == False:
         cookiesAcceptButton = wait.until(EC.element_to_be_clickable((By.ID, "onetrust-accept-btn-handler")))
@@ -36,30 +28,16 @@ def navigateThroughSpecificSetOfParameters(*args):
     if len(args) <= 3:
         try:
 
-            #jedno podejscie, kazda akcja w linii
-            manufacturerInput = wait.until(EC.element_to_be_clickable((By.ID, "filter_enum_make")))
-            manufacturerInput.send_keys(args[0])
-            driver.implicitly_wait(1)
-            # checkAndCorrect(manufacturerInput, args[0])
-            manufacturerInput.send_keys(Keys.RETURN)
+            sendKeys_Wait_PressReturn("//*[@id='filter_enum_make']", args[0])
 
-            #drugie podejscie, action chain
-            modelInput = wait.until(EC.element_to_be_clickable((By.ID, "filter_enum_model")))
-            action.click(modelInput).send_keys(args[1]).pause(1).perform()
-            # checkAndCorrect(modelInput, args[1])
-            modelInput.send_keys(Keys.RETURN)
-
+            sendKeys_Wait_PressReturn("//*[@id='filter_enum_model']", args[1])
 
             if len(args) == 2:
                 pass
             else:
-                generationInput = wait.until(EC.element_to_be_clickable((By.ID, "filter_enum_generation")))
-                action.click(generationInput).send_keys(args[2]).pause(0.5).perform()
-                # checkAndCorrect(generationInput, args[2])
-                generationInput.send_keys(Keys.RETURN)
-                # TODO wait.until(EC.text_to_be_present_in_element(generationInput, args[2]))
-                time.sleep(2)
+                sendKeys_Wait_PressReturn("//*[@id='filter_enum_generation']", args[2])
 
+            driver.implicitly_wait(1)
             searchButton = driver.find_element(By.XPATH, "//button[@data-testid='submit-btn']")
             searchButton.click()
 
@@ -86,11 +64,22 @@ def navigateThroughSpecificSetOfParameters(*args):
             # send post request
             break
 
-# def checkAndCorrect(element, value):
-#     if element.get_attribute != value:
-#         element.clear()
-#         try:
-#             for i in value:
-#                 element.send_keys(i)
-#         except Exception as e:
-#             print(f"Value provided to input is invalid, check parameters.json. \n{e}")
+def sendKeys_Wait_PressReturn(xpath, value):
+    wait = WebDriverWait(driver, 5)
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    element.send_keys(value)
+    driver.implicitly_wait(2)
+    checkAndCorrect(element, value)
+    element.send_keys(Keys.RETURN)
+    driver.implicitly_wait(2)
+    
+
+    
+def checkAndCorrect(element, value):
+    if element.text != value:
+        element.clear()
+        try:
+            for i in value:
+                element.send_keys(i)
+        except Exception as e:
+            print(f"Value provided to input is invalid, check parameters.json. \n{e}")
