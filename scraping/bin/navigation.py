@@ -1,3 +1,4 @@
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -16,7 +17,7 @@ driver = webdriver.Chrome(options = initiateWebDriverOptions(), service=ChromeSe
 action = ActionChains(driver)
 
 
-def navigateThroughSpecificSetOfParameters(*args):
+def navigateThroughSpecificSetOfParameters(*currentSearchParameters):
     wait = WebDriverWait(driver, 5)
     driver.get("https://www.otomoto.pl/")
 
@@ -25,17 +26,17 @@ def navigateThroughSpecificSetOfParameters(*args):
         cookiesAcceptButton.click()
         globals.cookieFlag = True
     
-    if len(args) <= 3:
+    if len(currentSearchParameters) <= 3:
         try:
 
-            sendKeys_Wait_PressReturn("//*[@id='filter_enum_make']", args[0])
+            sendKeys_Wait_PressReturn("//*[@id='filter_enum_make']", currentSearchParameters[0])
 
-            sendKeys_Wait_PressReturn("//*[@id='filter_enum_model']", args[1])
+            sendKeys_Wait_PressReturn("//*[@id='filter_enum_model']", currentSearchParameters[1])
 
-            if len(args) == 2:
+            if len(currentSearchParameters) == 2:
                 pass
             else:
-                sendKeys_Wait_PressReturn("//*[@id='filter_enum_generation']", args[2])
+                sendKeys_Wait_PressReturn("//*[@id='filter_enum_generation']", currentSearchParameters[2])
 
             driver.implicitly_wait(1)
             searchButton = driver.find_element(By.XPATH, "//button[@data-testid='submit-btn']")
@@ -52,7 +53,7 @@ def navigateThroughSpecificSetOfParameters(*args):
         wait.until(EC.title_contains, "osobowe - otomoto.pl")
         wait.until(EC.visibility_of_element_located((By.XPATH, "//article[@data-testid = 'listing-ad']")))
 
-        scrapModelsFromCurrentSite_AndSendRequestToDatabase(driver.page_source)
+        scrapModelsFromCurrentSite_AndSendRequestToDatabase(driver.page_source, currentSearchParameters)
         
         try:
             siteNextPageButton = wait.until(EC.element_to_be_clickable(
@@ -71,7 +72,7 @@ def sendKeys_Wait_PressReturn(xpath, value):
     driver.implicitly_wait(2)
     checkAndCorrect(element, value)
     element.send_keys(Keys.RETURN)
-    driver.implicitly_wait(2)
+    time.sleep(2)
     
 
     
